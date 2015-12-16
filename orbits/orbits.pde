@@ -52,7 +52,6 @@ class Planet extends CelestialBody {
   
   void move(float dt) {
     super.move(dt);
-    println(vel);  
   }
   
 }
@@ -69,7 +68,7 @@ class GameManager {
   boolean paused = false;
   int gameWidth = 800;
   int gameHeight = 600;
-  final float GRAVITY = .0000001;
+  final float GRAVITY = .001;
   
   ArrayList<CelestialBody> bodies = new ArrayList<CelestialBody>(); 
 
@@ -87,7 +86,7 @@ class GameManager {
       for (CelestialBody body2 : bodies) {
         if (body != body2) {
           body.acl = PVector.sub(body2.pos, body.pos);
-          body.acl.setMag(GRAVITY * body2.mass*body.pos.dist(body2.pos));
+          body.acl.setMag((float)(GRAVITY * body2.mass/Math.pow(body.pos.dist(body2.pos),2)));
         }
       }   
     }
@@ -117,7 +116,7 @@ void setup() {
   Star star = new Star(new PVector(width/2, height/2), new PVector(0,0), 
                      500000000, 30, color(255,255,255));
                      
-  Planet planet1 = new Planet(new PVector(100,100), new PVector(5000,100),
+  Planet planet1 = new Planet(new PVector(100,100), new PVector(32,0),
                             100, 10, color(255, 0, 0));
   
   game.addBody(star);
