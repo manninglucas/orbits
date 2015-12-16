@@ -91,7 +91,19 @@ class GameManager {
       }   
     }
   }
-  
+  void collide() {
+    for (CelestialBody body : bodies) {
+      for (CelestialBody body2 : bodies) {
+        float dist = PVector.dist(body.pos, body2.pos);
+        if (dist < body.radius+body2.radius && dist != 0) {
+          println("colliding");
+          //Maybe move this elsewhere, not sure why dist is sometimes 0
+          //But works
+        }
+        
+      }
+    }
+  }
   void draw() {
     for (CelestialBody body : bodies) {
       body.draw();
@@ -132,4 +144,5 @@ void draw() {
   
   game.update(dt);
   game.draw(); 
+  game.collide();
 }
