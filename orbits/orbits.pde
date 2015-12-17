@@ -85,12 +85,14 @@ class GameManager {
   void update(float dt) {
     for (CelestialBody body : bodies) {
       body.move(dt);
+      body.acl.set(0,0);
       for (CelestialBody body2 : bodies) {
         if (body != body2) {
-          body.acl = PVector.sub(body2.pos, body.pos);
-          body.acl.setMag((float)(GRAVITY * body2.mass/Math.pow(body.pos.dist(body2.pos),2)));
+          PVector acl = PVector.sub(body2.pos, body.pos);
+          acl.setMag((float)(GRAVITY * body2.mass/Math.pow(body.pos.dist(body2.pos),2)));
+          body.acl.add(acl);
         }
-      }   
+      }
     }
   }
   void collide() {
@@ -132,11 +134,14 @@ void setup() {
                      500000000, 30, color(255,255,255));
                      
   Planet planet1 = new Planet(new PVector(200,height/2), new PVector(0,50),
+                            100000000, 10, color(255, 0, 0));
+                            
+  Planet planet2 = new Planet(new PVector(width/2,100), new PVector(50,0),
                             100, 10, color(255, 0, 0));
   
   game.addBody(star);
   game.addBody(planet1);
-
+  game.addBody(planet2);
 }
 
 void draw() { 
