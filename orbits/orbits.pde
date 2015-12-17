@@ -3,6 +3,8 @@
         user input panel
         mouse throw initial velocity
         acceleration calculation
+        resolve collisions with dpos
+        draw its path
 */
 
 abstract class CelestialBody {
@@ -91,7 +93,20 @@ class GameManager {
       }   
     }
   }
-  
+  void collide() {
+    for (CelestialBody body : bodies) {
+      for (CelestialBody body2 : bodies) {
+        if (body != body2) {
+          float dist = body.pos.dist(body2.pos);
+          if (dist < body.radius+body2.radius) {
+            println("colliding");
+            //Maybe move this elsewhere, not sure why dist is sometimes 0
+            //But works
+          }
+        }      
+      }
+    }
+  }
   void draw() {
     for (CelestialBody body : bodies) {
       body.draw();
@@ -116,7 +131,7 @@ void setup() {
   Star star = new Star(new PVector(width/2, height/2), new PVector(0,0), 
                      500000000, 30, color(255,255,255));
                      
-  Planet planet1 = new Planet(new PVector(100,100), new PVector(32,0),
+  Planet planet1 = new Planet(new PVector(200,height/2), new PVector(0,50),
                             100, 10, color(255, 0, 0));
   
   game.addBody(star);
@@ -132,4 +147,5 @@ void draw() {
   
   game.update(dt);
   game.draw(); 
+  game.collide();
 }
