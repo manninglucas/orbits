@@ -5,6 +5,7 @@
         acceleration calculation
         resolve collisions with dpos
         draw its path
+        pause function
 */
 
 abstract class CelestialBody {
@@ -64,11 +65,64 @@ class Star extends CelestialBody {
     super(ipos, ivel, imass, iradius, icol);
   }
 }
-
+class UserInterface {
+  //Initial Values For planet spawning/UI
+  int planetCounter = 0;
+  int planetXvel= 25;
+  int planetYvel = 25;
+  int planetMass = 500;
+  int planetRadius = 10;
+  int planetRed = 0;
+  int planetGreen = 0;
+  int planetBlue = 255;
+  int planetLimit = 25;
+  boolean help = false;
+  UserInterface() {}
+  void draw() {
+    int textShift = 160;
+    int helpTextShift = 280;
+    fill(255);
+    textAlign(LEFT);
+    textSize(16);
+    text("Planet Details", width-textShift, 20);
+    textSize(14);
+    text("X Vel:   " + planetXvel, width-textShift, 35);
+    text("Y Vel:   " + planetYvel, width-textShift, 50); 
+    text("Mass:    " + planetMass, width-textShift, 65);
+    text("Radius:  " + planetRadius, width-textShift, 80);
+    text("Red:     " + planetRed, width-textShift, 95);
+    text("Green:   " + planetGreen, width-textShift, 110);
+    text("Blue:    " + planetBlue, width-textShift, 125);
+    text("Preview: ", width-textShift, 140);
+    fill(color(planetRed, planetGreen, planetBlue));
+    ellipse(width-80,150+planetRadius, planetRadius, planetRadius);
+    fill(255);
+    text("Planet Num:   " + planetCounter, width-textShift, 170+planetRadius*2);
+    text("Planet Limit: " + planetLimit, width-textShift, 185+planetRadius*2);
+    text("Press '1' for help", width-textShift, 200+planetRadius*2);
+    fill(color(255,0,0));
+    if (help) { //Display Help
+      fill(color(255,0,0));
+      text("Click to place a planet", width-helpTextShift, 215+planetRadius*2);
+      text("| ADD | SUB |", width-helpTextShift, 20);
+      text("| 'q' | 'a' |", width-helpTextShift, 35);
+      text("| 'w' | 's' |", width-helpTextShift, 50);
+      text("| 'e' | 'd' |", width-helpTextShift, 65);
+      text("| 'r' | 'f' |", width-helpTextShift, 80);
+      text("| 't' | 'g' |", width-helpTextShift, 95);
+      text("| 'y' | 'h' |", width-helpTextShift, 110);
+      text("| 'u' | 'j' |", width-helpTextShift, 125);
+      text("-------------", width-helpTextShift, 140);
+      text("'ESC' = Exit", width-helpTextShift, 155);
+      text("'p' =  Pause", width-helpTextShift, 170);
+    }
+  }
+    
+}
 class GameManager {
   int framerate = 60;
   boolean paused = false;
-  int gameWidth = 800;
+  int gameWidth = width-200;
   int gameHeight = 600;
   final float GRAVITY = .001;
   
@@ -101,7 +155,7 @@ class GameManager {
         if (body != body2) {
           float dist = body.pos.dist(body2.pos);
           if (dist < body.radius+body2.radius) {
-            println("colliding");
+            //println("colliding");
             //Maybe move this elsewhere, not sure why dist is sometimes 0
             //But works
           }
@@ -117,31 +171,33 @@ class GameManager {
 }
 
 GameManager game = new GameManager();
-
+UserInterface UI = new UserInterface();
+Planet[] planets;
 long t;
+boolean paused = false;
 
 void setup() {
+  PFont fixedWidthFont = createFont("Courier New", 12);
+  textFont(fixedWidthFont);
   background(0);
   noStroke();
   smooth();
-  
+  planets = new Planet[UI.planetLimit];
+
   ellipseMode(RADIUS);
   t = System.nanoTime();
   
-  size(800, 600);
+  size(1000, 600);
   
   Star star = new Star(new PVector(width/2, height/2), new PVector(0,0), 
                      500000000, 30, color(255,255,255));
                      
-  Planet planet1 = new Planet(new PVector(200,height/2), new PVector(0,50),
-                            100000000, 10, color(255, 0, 0));
+  //Planet planet1 = new Planet(new PVector(200,height/2), new PVector(0,50),
+  //                          100000000, 10, color(255, 0, 0));
                             
-  Planet planet2 = new Planet(new PVector(width/2,100), new PVector(50,0),
-                            100, 10, color(255, 0, 0));
-  
   game.addBody(star);
-  game.addBody(planet1);
-  game.addBody(planet2);
+  //game.addBody(planet1);
+  //UI.planetCounter++;
 }
 
 void draw() { 
@@ -149,8 +205,82 @@ void draw() {
   long ct = System.nanoTime();
   float dt = (ct - t) / 1000000000.0;
   t = ct;
-  
-  game.update(dt);
+  if (!paused) {
+    game.update(dt);
+    game.collide();
+  } else {
+    fill(255);
+    textSize(25);
+    text("PAUSED", width/2, 30);
+  }
   game.draw(); 
-  game.collide();
+  UI.draw();
+}
+
+void mouseClicked() {
+  println(mouseX);
+  println(mouseY);
+  if (UI.planetCounter<UI.planetLimit) {
+    planets[UI.planetCounter] = new Planet(new PVector(mouseX,mouseY), new PVector(UI.planetXvel,UI.planetYvel),
+                          UI.planetMass, UI.planetRadius, color(UI.planetRed, UI.planetGreen, UI.planetBlue));
+    game.addBody(planets[UI.planetCounter]);  
+    UI.planetCounter++;
+  }
+}
+void keyPressed() {
+  if (key == 'p') {
+    paused = !paused;
+  } else if (key == ESC) {
+    exit();
+  } else if (key == '1') {
+    UI.help = !UI.help;
+  } 
+  
+  //Change Planet Params
+  if (key == 'q') {
+    UI.planetXvel+=5;
+  } else if (key == 'a') {
+    UI.planetXvel-=5;
+  } else if (key == 'w') {
+    UI.planetYvel+=2;
+  } else if (key == 's') {
+    UI.planetYvel-=2;
+  } else if (key == 'e') {
+    UI.planetMass+=5;
+  } else if (key == 'd') {
+    if (UI.planetRadius > 0) {
+      UI.planetMass-=5;
+    }
+  } else if (key == 'r') {
+    UI.planetRadius+=2;
+  } else if (key == 'f') {
+    if (UI.planetRadius > 0) {
+      UI.planetRadius-=2;
+    }
+  } else if (key == 't') {
+    if (UI.planetRed<255) {
+      UI.planetRed+=2;
+    }
+  } else if (key == 'g') {
+    if (UI.planetRed>0) {
+      UI.planetRed-=2;
+    }
+  } else if (key == 'y') {
+    if (UI.planetGreen<255) {
+      UI.planetGreen+=2;
+    }
+  } else if (key == 'h') {
+    if (UI.planetGreen>0) {
+      UI.planetGreen-=2;
+    }
+  } else if (key == 'u') {
+    if (UI.planetBlue<255) {
+      UI.planetBlue+=2;
+    }
+  } else if (key == 'g') {
+    if (UI.planetRed>0) {
+      UI.planetBlue-=2;
+    }
+  }
+  
 }
