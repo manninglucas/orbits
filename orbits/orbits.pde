@@ -277,8 +277,8 @@ void keyPressed() {
     if (UI.planetBlue<255) {
       UI.planetBlue+=2;
     }
-  } else if (key == 'g') {
-    if (UI.planetRed>0) {
+  } else if (key == 'j') {
+    if (UI.planetBlue>0) {
       UI.planetBlue-=2;
     }
   }
