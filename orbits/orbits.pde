@@ -78,7 +78,9 @@ class UserInterface {
   int planetBlue = 255;
   int planetLimit = 25;
   boolean help = false;
-  UserInterface() {}
+  UserInterface() {
+    
+  }
   void draw() {
     int textShift = 160;
     int helpTextShift = 280;
@@ -116,6 +118,7 @@ class UserInterface {
       text("-------------", width-helpTextShift, 140);
       text("'ESC' = Exit", width-helpTextShift, 155);
       text("'p' =  Pause", width-helpTextShift, 170);
+      text("'l' =  Lines", width-helpTextShift, 185);
     }
   }
     
@@ -174,6 +177,7 @@ UserInterface UI = new UserInterface();
 Planet[] planets;
 long t;
 boolean paused = false;
+boolean drawPath = false;
 
 void setup() {
   PFont fixedWidthFont = createFont("Courier New", 12);
@@ -187,6 +191,7 @@ void setup() {
   t = System.nanoTime();
   
   size(1000, 600);
+  
   
   Star star = new Star(new PVector(width/2, height/2), new PVector(0,0), 
                      500000000, 30, color(255,255,255));
@@ -226,6 +231,8 @@ void keyPressed() {
     paused = !paused;
   } else if (key == ESC) {
     exit();
+  } else if (key == 'l') {
+    drawPath = !drawPath; //Doesnt do anything yet
   } else if (key == '1') {
     UI.help = !UI.help;
   } 
@@ -255,7 +262,7 @@ void keyPressed() {
       UI.planetRed+=2;
     }
   } else if (key == 'g') {
-    if (UI.planetRed>0) {
+    if (UI.planetRed>1) {
       UI.planetRed-=2;
     }
   } else if (key == 'y') {
@@ -263,7 +270,7 @@ void keyPressed() {
       UI.planetGreen+=2;
     }
   } else if (key == 'h') {
-    if (UI.planetGreen>0) {
+    if (UI.planetGreen>1) {
       UI.planetGreen-=2;
     }
   } else if (key == 'u') {
@@ -271,7 +278,7 @@ void keyPressed() {
       UI.planetBlue+=2;
     }
   } else if (key == 'j') {
-    if (UI.planetBlue>0) {
+    if (UI.planetBlue>1) {
       UI.planetBlue-=2;
     }
   }
