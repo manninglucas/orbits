@@ -5,7 +5,8 @@
         acceleration calculation
         resolve collisions with dpos
         draw its path
-        pause function
+        select and delete planet
+        delete planets too far off screen
 */
 
 abstract class CelestialBody {
@@ -156,8 +157,6 @@ class GameManager {
           float dist = body.pos.dist(body2.pos);
           if (dist < body.radius+body2.radius) {
             //println("colliding");
-            //Maybe move this elsewhere, not sure why dist is sometimes 0
-            //But works
           }
         }      
       }
@@ -191,13 +190,8 @@ void setup() {
   
   Star star = new Star(new PVector(width/2, height/2), new PVector(0,0), 
                      500000000, 30, color(255,255,255));
-                     
-  //Planet planet1 = new Planet(new PVector(200,height/2), new PVector(0,50),
-  //                          100000000, 10, color(255, 0, 0));
-                            
+
   game.addBody(star);
-  //game.addBody(planet1);
-  //UI.planetCounter++;
 }
 
 void draw() { 
@@ -235,7 +229,6 @@ void keyPressed() {
   } else if (key == '1') {
     UI.help = !UI.help;
   } 
-  
   //Change Planet Params
   if (key == 'q') {
     UI.planetXvel+=5;
