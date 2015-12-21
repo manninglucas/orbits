@@ -1,8 +1,0 @@
-"X vel:   " + planetXvel
-"Y vel:   " + planetYvel
-"Mass:    " + planetMass
-"Radius:  " + planetRadius
-"Red:     " + planetRed
-"Green:   " + planetGreen
-"Blue:    " + planetBlue
-"Preview: "
