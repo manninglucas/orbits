@@ -7,6 +7,9 @@
         draw its path
         select and delete planet
         delete planets too far off screen
+        Calculate correct gravity
+        change points the lines
+        check drawpath boolean
 */
 
 abstract class CelestialBody {
@@ -17,6 +20,8 @@ abstract class CelestialBody {
   long mass;
   float radius;
   color col;
+  int pathLength = 500;
+  ArrayList<PVector> path;
   
   CelestialBody(PVector ipos, PVector ivel, 
                 long imass, float iradius, color icol) {       
@@ -25,17 +30,28 @@ abstract class CelestialBody {
     mass = imass;
     radius = iradius;
     col = icol;
+    path = new ArrayList<PVector>();
   }
   
   void move(float dt) {
     vel.add(PVector.mult(acl,dt));
     dpos = PVector.mult(vel, dt).add(PVector.mult(acl,0.5*dt*dt));
     pos.add(dpos);
+    
+    path.add(new PVector(pos.x, pos.y));
+    println(path.size());
+    
+    if (path.size() > pathLength) {
+      path.remove(0);      
+    }
   }
   
   void draw() {
     fill(col);
     ellipse(pos.x, pos.y, radius, radius);
+    for (PVector point : path) {
+      ellipse(point.x, point.y,1,1);
+    }
   }
   
   void intersect() {
@@ -140,8 +156,14 @@ class GameManager {
     bodies.add(body);
   }
   
+  void cleanUp() {
+    for (int i = 0; i < bodies.size(); i++) {
+      
+    }
+  }
+  
   void update(float dt) {
-    for (CelestialBody body : bodies) {
+    for (CelestialBody body : bodies) {      
       body.move(dt);
       body.acl.set(0,0);
       for (CelestialBody body2 : bodies) {
