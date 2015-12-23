@@ -4,11 +4,8 @@
         mouse throw initial velocity
         acceleration calculation
         resolve collisions with dpos
-        draw its path
         select and delete planet
-        delete planets too far off screen
         Calculate correct gravity
-        change points the lines
         check drawpath boolean
 */
 
@@ -39,7 +36,6 @@ abstract class CelestialBody {
     pos.add(dpos);
     
     path.add(new PVector(pos.x, pos.y));
-    println(path.size());
     
     if (path.size() > pathLength) {
       path.remove(0);      
@@ -48,9 +44,12 @@ abstract class CelestialBody {
   
   void draw() {
     fill(col);
+    stroke(col);
     ellipse(pos.x, pos.y, radius, radius);
-    for (PVector point : path) {
-      ellipse(point.x, point.y,1,1);
+    for (int i = 1; i < path.size(); ++i) {
+      PVector p1 = path.get(i);
+      PVector p2 = path.get(i-1);
+      line(p1.x, p1.y, p2.x, p2.y);
     }
   }
   
@@ -158,7 +157,11 @@ class GameManager {
   
   void cleanUp() {
     for (int i = 0; i < bodies.size(); i++) {
-      
+      CelestialBody body = bodies.get(i);
+      PVector center = new PVector(width/2, height/2);
+      if (body.pos.dist(center) > 5000) {
+        bodies.remove(i);
+      }
     }
   }
   
@@ -187,6 +190,7 @@ class GameManager {
       }
     }
   }
+  
   void draw() {
     for (CelestialBody body : bodies) {
       body.draw();
@@ -214,7 +218,6 @@ void setup() {
   
   size(1000, 600);
   
-  
   Star star = new Star(new PVector(width/2, height/2), new PVector(0,0), 
                      500000000, 30, color(255,255,255));
 
@@ -229,6 +232,7 @@ void draw() {
   if (!paused) {
     game.update(dt);
     game.collide();
+    game.cleanUp();
   } else {
     fill(255);
     textSize(25);
@@ -239,8 +243,6 @@ void draw() {
 }
 
 void mouseClicked() {
-  println(mouseX);
-  println(mouseY);
   if (UI.planetCounter<UI.planetLimit) {
     planets[UI.planetCounter] = new Planet(new PVector(mouseX,mouseY), new PVector(UI.planetXvel,UI.planetYvel),
                           UI.planetMass, UI.planetRadius, color(UI.planetRed, UI.planetGreen, UI.planetBlue));
