@@ -14,14 +14,14 @@ abstract class CelestialBody {
   PVector acl = new PVector(0,0); //acceleration
   PVector pos; //position
   PVector dpos = new PVector(0,0); //change in position to next frame: delta pos
-  long mass;
+  double mass;
   float radius;
   color col;
   int pathLength = 500;
   ArrayList<PVector> path;
   
   CelestialBody(PVector ipos, PVector ivel, 
-                long imass, float iradius, color icol) {       
+                double imass, float iradius, color icol) {       
     pos = ipos;
     vel = ivel;
     mass = imass;
@@ -31,6 +31,7 @@ abstract class CelestialBody {
   }
   
   void move(float dt) {
+    acl.div((float)1e14);
     vel.add(PVector.mult(acl,dt));
     dpos = PVector.mult(vel, dt).add(PVector.mult(acl,0.5*dt*dt));
     pos.add(dpos);
@@ -64,7 +65,7 @@ abstract class CelestialBody {
 
 class Planet extends CelestialBody {
   
-  Planet(PVector ipos, PVector ivel, long imass,
+  Planet(PVector ipos, PVector ivel, double imass,
          float iradius, color icol) {
     super(ipos, ivel, imass, iradius, icol);
   }
@@ -76,14 +77,13 @@ class Planet extends CelestialBody {
 }
 
 class Star extends CelestialBody {
-  Star(PVector ipos, PVector ivel, long imass,
+  Star(PVector ipos, PVector ivel, double imass,
          float iradius, color icol) {
     super(ipos, ivel, imass, iradius, icol);
   }
 }
 class UserInterface {
   //Initial Values For planet spawning/UI
-  int planetCounter = 0;
   int planetXvel= 25;
   int planetYvel = 25;
   int planetMass = 500;
@@ -91,12 +91,12 @@ class UserInterface {
   int planetRed = 0;
   int planetGreen = 0;
   int planetBlue = 255;
-  int planetLimit = 25;
+
   boolean help = false;
   UserInterface() {
     
   }
-  void draw() {
+  void draw(int planetCounter, int planetLimit) {
     int textShift = 160;
     int helpTextShift = 280;
     fill(255);
@@ -143,12 +143,17 @@ class GameManager {
   boolean paused = false;
   int gameWidth = width-200;
   int gameHeight = 600;
-  final float GRAVITY = .001;
+  final float GRAVITY = 6.67e-11;
+  int planetCounter = 0;
+  int planetLimit = 25;
+  UserInterface UI;
   
   ArrayList<CelestialBody> bodies = new ArrayList<CelestialBody>(); 
 
-  GameManager() {
-    
+  GameManager(UserInterface _ui, ArrayList<CelestialBody> initialBodies) {
+    UI = _ui;
+    for (CelestialBody body : initialBodies)
+      addBody(body);
   }
   
   void addBody(CelestialBody body) {
@@ -161,7 +166,18 @@ class GameManager {
       PVector center = new PVector(width/2, height/2);
       if (body.pos.dist(center) > 5000) {
         bodies.remove(i);
+        planetCounter--;
       }
+    }
+  }
+  
+  void createPlanet()
+  {
+    if (planetCounter < planetLimit) {
+      Planet planet = new Planet(new PVector(mouseX,mouseY), new PVector(UI.planetXvel,UI.planetYvel),
+                            UI.planetMass, UI.planetRadius, color(UI.planetRed, UI.planetGreen, UI.planetBlue));
+      game.addBody(planet);  
+      planetCounter++;
     }
   }
   
@@ -192,26 +208,29 @@ class GameManager {
   }
   
   void draw() {
+    UI.draw(planetCounter, planetLimit);
     for (CelestialBody body : bodies) {
       body.draw();
     }
   }
 }
 
-GameManager game = new GameManager();
 UserInterface UI = new UserInterface();
-Planet[] planets;
+//maybe add some initial planets/stars?
+ArrayList<CelestialBody> intialBodies;
+
+GameManager game;
+
 long t;
 boolean paused = false;
 boolean drawPath = false;
 
 void setup() {
+  noStroke();
   PFont fixedWidthFont = createFont("Courier New", 12);
   textFont(fixedWidthFont);
   background(0);
-  noStroke();
   smooth();
-  planets = new Planet[UI.planetLimit];
 
   ellipseMode(RADIUS);
   t = System.nanoTime();
@@ -219,9 +238,12 @@ void setup() {
   size(1000, 600);
   
   Star star = new Star(new PVector(width/2, height/2), new PVector(0,0), 
-                     500000000, 30, color(255,255,255));
-
-  game.addBody(star);
+                     2e30, 30, color(255,255,255));
+                     
+  intialBodies = new ArrayList<CelestialBody>();
+  intialBodies.add(star);
+                     
+  game = new GameManager(UI, intialBodies);
 }
 
 void draw() { 
@@ -239,16 +261,10 @@ void draw() {
     text("PAUSED", width/2, 30);
   }
   game.draw(); 
-  UI.draw();
 }
 
 void mouseClicked() {
-  if (UI.planetCounter<UI.planetLimit) {
-    planets[UI.planetCounter] = new Planet(new PVector(mouseX,mouseY), new PVector(UI.planetXvel,UI.planetYvel),
-                          UI.planetMass, UI.planetRadius, color(UI.planetRed, UI.planetGreen, UI.planetBlue));
-    game.addBody(planets[UI.planetCounter]);  
-    UI.planetCounter++;
-  }
+  game.createPlanet();
 }
 void keyPressed() {
   if (key == 'p') {
