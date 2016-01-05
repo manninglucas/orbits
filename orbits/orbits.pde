@@ -96,7 +96,7 @@ class UserInterface {
   UserInterface() {
     
   }
-  void draw(int planetCounter, int planetLimit) {
+  void draw(int planetCounter, int planetLimit, CelestialBody body) {
     int textShift = 160;
     int helpTextShift = 280;
     fill(255);
@@ -104,20 +104,21 @@ class UserInterface {
     textSize(16);
     text("Planet Details", width-textShift, 20);
     textSize(14);
-    text("X Vel:   " + planetXvel, width-textShift, 35);
-    text("Y Vel:   " + planetYvel, width-textShift, 50); 
-    text("Mass:    " + planetMass, width-textShift, 65);
-    text("Radius:  " + planetRadius, width-textShift, 80);
-    text("Red:     " + planetRed, width-textShift, 95);
-    text("Green:   " + planetGreen, width-textShift, 110);
-    text("Blue:    " + planetBlue, width-textShift, 125);
+    text("X Vel:   " + body.vel.x, width-textShift, 35);
+    text("Y Vel:   " + body.vel.y, width-textShift, 50); 
+    text("Mass:    " + body.mass, width-textShift, 65);
+    text("Radius:  " + body.radius, width-textShift, 80);
+    text("Red:     " + red(body.col), width-textShift, 95);
+    text("Green:   " + green(body.col), width-textShift, 110);
+    text("Blue:    " + blue(body.col), width-textShift, 125);
     text("Preview: ", width-textShift, 140);
-    fill(color(planetRed, planetGreen, planetBlue));
-    ellipse(width-80,150+planetRadius, planetRadius, planetRadius);
+    noStroke();
+    fill(body.col);
+    ellipse(width-80,150+body.radius, body.radius, body.radius);
     fill(255);
-    text("Planet Num:   " + planetCounter, width-textShift, 170+planetRadius*2);
-    text("Planet Limit: " + planetLimit, width-textShift, 185+planetRadius*2);
-    text("Press '1' for help", width-textShift, 200+planetRadius*2);
+    text("Planet Num:   " + planetCounter, width-textShift, 170+body.radius*2);
+    text("Planet Limit: " + planetLimit, width-textShift, 185+body.radius*2);
+    text("Press '1' for help", width-textShift, 200+body.radius*2);
     fill(color(255,0,0));
     if (help) { //Display Help
       fill(color(255,0,0));
@@ -144,9 +145,9 @@ class GameManager {
   int gameWidth = width-200;
   int gameHeight = 600;
   final float GRAVITY = 6.67e-11;
-  int planetCounter = 0;
   int planetLimit = 25;
   UserInterface UI;
+  CelestialBody selectedBody;
   
   ArrayList<CelestialBody> bodies = new ArrayList<CelestialBody>(); 
 
@@ -154,6 +155,8 @@ class GameManager {
     UI = _ui;
     for (CelestialBody body : initialBodies)
       addBody(body);
+      
+    selectedBody = bodies.get(0);
   }
   
   void addBody(CelestialBody body) {
@@ -166,18 +169,17 @@ class GameManager {
       PVector center = new PVector(width/2, height/2);
       if (body.pos.dist(center) > 5000) {
         bodies.remove(i);
-        planetCounter--;
       }
     }
   }
   
   void createPlanet()
   {
-    if (planetCounter < planetLimit) {
+    if (bodies.size() < planetLimit) {
       Planet planet = new Planet(new PVector(mouseX,mouseY), new PVector(UI.planetXvel,UI.planetYvel),
                             UI.planetMass, UI.planetRadius, color(UI.planetRed, UI.planetGreen, UI.planetBlue));
-      game.addBody(planet);  
-      planetCounter++;
+      game.addBody(planet);
+      selectedBody = planet;
     }
   }
   
@@ -208,7 +210,7 @@ class GameManager {
   }
   
   void draw() {
-    UI.draw(planetCounter, planetLimit);
+    UI.draw(bodies.size(), planetLimit, selectedBody);
     for (CelestialBody body : bodies) {
       body.draw();
     }
@@ -275,51 +277,52 @@ void keyPressed() {
     drawPath = !drawPath; //Doesnt do anything yet
   } else if (key == '1') {
     UI.help = !UI.help;
-  } 
+  }
+  CelestialBody body = game.selectedBody;
   //Change Planet Params
   if (key == 'q') {
-    UI.planetXvel+=5;
+    body.vel.x +=5;
   } else if (key == 'a') {
-    UI.planetXvel-=5;
+    body.vel.x -=5;
   } else if (key == 'w') {
-    UI.planetYvel+=2;
+    body.vel.y +=5;
   } else if (key == 's') {
-    UI.planetYvel-=2;
+    body.vel.y -=5;
   } else if (key == 'e') {
-    UI.planetMass+=5;
+    body.mass +=5;
   } else if (key == 'd') {
-    if (UI.planetRadius > 0) {
-      UI.planetMass-=5;
+    if (body.mass > 5) {
+      body.mass -=5;
     }
   } else if (key == 'r') {
-    UI.planetRadius+=2;
+    body.radius +=5;
   } else if (key == 'f') {
-    if (UI.planetRadius > 0) {
-      UI.planetRadius-=2;
+    if (body.radius > 2) {
+      body.radius -=2;
     }
   } else if (key == 't') {
-    if (UI.planetRed<255) {
-      UI.planetRed+=2;
+    if (red(body.col)<255) {
+      //to do
     }
   } else if (key == 'g') {
-    if (UI.planetRed>1) {
-      UI.planetRed-=2;
+    if (red(body.col)>1) {
+      //todo
     }
   } else if (key == 'y') {
-    if (UI.planetGreen<255) {
-      UI.planetGreen+=2;
+    if (green(body.col)<255) {
+      ;//todo
     }
   } else if (key == 'h') {
-    if (UI.planetGreen>1) {
-      UI.planetGreen-=2;
+    if (green(body.col)>1) {
+      //todo
     }
   } else if (key == 'u') {
-    if (UI.planetBlue<255) {
-      UI.planetBlue+=2;
+    if (blue(body.col)<255) {
+      //todo
     }
   } else if (key == 'j') {
-    if (UI.planetBlue>1) {
-      UI.planetBlue-=2;
+    if (blue(body.col)>1) {
+      //todo
     }
   }
   
