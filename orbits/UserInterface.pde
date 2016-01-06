@@ -2,7 +2,7 @@ class UserInterface {
   //Initial Values For planet spawning/UI
   int planetXvel= 24;
   int planetYvel = 24;
-  int planetMass = 500;
+  double planetMass = 6e24;
   int planetRadius = 10;
   int planetRed = int(random(0,255));
   int planetGreen = int(random(0,255));
@@ -15,6 +15,9 @@ class UserInterface {
   UserInterface() {}
 
   void draw(boolean paused, int bodyCount, CelestialBody selected) {
+    fill(0);
+    noStroke();
+    rect(width-160,0,300,185+planetRadius*2+16);
     if (planetSelected) { //If a planet is selected, update its attributes in draw
       selectPlanetLoad(selected);
     }
@@ -56,10 +59,13 @@ class UserInterface {
       text("Bodies: " + bodyCount, width-textShift, 170+planetRadius*2);
     }
     text("Press '1' for help", width-textShift, 185+planetRadius*2);
-    fill(color(255,0,0));
 
     if (help) { //Display Help
-      fill(color(255,0,0));
+      fill(0);
+      noStroke();
+      rect(width-280,0,120,200+planetRadius*2+16);
+      rect(width-280,185+planetRadius*2+16,300,60);
+      fill(255);
       text("| ADD | SUB |", width-helpTextShift, 20);
       text("| 'q' | 'a' |", width-helpTextShift, 35);
       text("| 'w' | 's' |", width-helpTextShift, 50);
@@ -73,15 +79,15 @@ class UserInterface {
       text("'p' =  Pause", width-helpTextShift, 170);
       text("'l' =  Lines", width-helpTextShift, 185);
       text("'o' = Reset #", width-helpTextShift, 200);
-      text("'SPACE' = Reset board", width-helpTextShift, 215+planetRadius*2);
-      text("Click to place a planet", width-helpTextShift, 230+planetRadius*2);
-      text("Click on planet to modify", width-helpTextShift, 245+planetRadius*2);
+      text("'z' = debug", width-helpTextShift, 215);
+      text("'SPACE' = Reset board", width-helpTextShift, 230+planetRadius*2);
+      text("Click to place a planet", width-helpTextShift, 245+planetRadius*2);
+      text("Click on planet to modify", width-helpTextShift, 260+planetRadius*2);
       if (planetSelected) {
-        fill(0,255,0);
-        text("'BACKSPACE' = Delete planet", width-helpTextShift, 260+planetRadius*2);
-        text("'ENTER' =  Deselect planet", width-helpTextShift, 275+planetRadius*2);
-        text("'m' =  Toggle move planet with mouse", width-helpTextShift, 290+planetRadius*2);
         fill(255);
+        text("'BACKSPACE' = Delete planet", width-helpTextShift, 275+planetRadius*2);
+        text("'ENTER' =  Deselect planet", width-helpTextShift, 290+planetRadius*2);
+        text("'m' =  Toggle move planet with mouse", width-helpTextShift, 305+planetRadius*2);
       }
     }
   }
@@ -92,7 +98,7 @@ class UserInterface {
     planetSelected = true;
     planetXvel = int(body.vel.x);
     planetYvel = int(body.vel.y);
-    planetMass = int(body.mass);
+    planetMass = body.mass;
     planetRadius = int(body.radius);
     planetRed = int(red(body.col));
     planetGreen = int(green(body.col));
@@ -102,7 +108,7 @@ class UserInterface {
   void selectPlanetChange(CelestialBody body) {
     //Change the values of the planet based on keyboard input (param change)
     body.vel = new PVector(planetXvel, planetYvel);
-    body.mass = planetMass;
+    body.mass = (float)planetMass;
     body.radius = planetRadius;
     body.col = color(planetRed, planetGreen, planetBlue);
   }
@@ -110,7 +116,7 @@ class UserInterface {
     //reset to default UI values
     planetXvel= 25;
     planetYvel = 25;
-    planetMass = 500;
+    planetMass = 6e24;
     planetRadius = 10;
     planetRed = int(random(0,255));
     planetGreen = int(random(0,255));

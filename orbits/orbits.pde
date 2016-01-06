@@ -1,9 +1,9 @@
-/*TODO: planet collisions?
+/*TODO: 
         mouse throw initial velocity
         acceleration calculation
         resolve collisions with dpos
-        Calculate correct gravity
         Have the option to chnage speed
+        fix planet limit
 */
 
 void resetBoard() {
@@ -16,7 +16,7 @@ UserInterface UI;
 GameManager game;
 
 long t;
-
+boolean debug = false;
 
 void setup() {
   PFont fixedWidthFont = createFont("Courier New", 12);
@@ -37,11 +37,23 @@ void setup() {
 
   game.addBody(star);
 }
+int frame = 0;
+float fps = 0.0;
 
 void draw() {
   clear();
   long ct = System.nanoTime();
   float dt = (ct - t) / 1000000000.0;
+  if (debug) {
+    if (frame == 20) { //sample only every 20 frames 
+      fps = 1/dt;
+      fill(255);
+      frame = 0;
+    }
+    textSize(30);
+    text(String.format("FPS: %.2f",fps), 0, 30);
+    frame++;
+  }
   t = ct;
   if (!game.paused) {
     game.update(dt);
@@ -78,7 +90,7 @@ void mouseClicked() {
   //Spawn Normally
   if (!noSpawn) { //not selecting planet
     game.addBody(new Planet(new PVector(mouseX, mouseY), new PVector(UI.planetXvel,UI.planetYvel),
-                        UI.planetMass, UI.planetRadius, color(UI.planetRed, UI.planetGreen, UI.planetBlue)));
+                        (float)UI.planetMass, UI.planetRadius, color(UI.planetRed, UI.planetGreen, UI.planetBlue)));
     UI.planetRed = int(random(0,255));
     UI.planetGreen = int(random(0,255));
     UI.planetBlue = int(random(0,255));
@@ -158,6 +170,9 @@ void keyPressed() {
       if (UI.planetBlue > 1) {
         UI.planetBlue -= 2;
       } 
+      break;
+    case 'z':
+      debug = !debug;
       break;
   }
   if (UI.planetSelected) {

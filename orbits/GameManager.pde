@@ -29,8 +29,6 @@ class GameManager {
       fill(255);
       ellipse(star.x, star.y, 1, 1);
     }
-    fill(0);
-    rect(width-280,0,300,350);
   }
 
   void addBody(CelestialBody body) {
