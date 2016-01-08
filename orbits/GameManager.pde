@@ -5,6 +5,7 @@ class GameManager {
   int gameHeight = 600;
   final float GRAVITY = 6.67e-11;
   ArrayList<CelestialBody> bodies = new ArrayList<CelestialBody>();
+  float simulationSpeed = 1;
   
   ArrayList<PVector> stars = new ArrayList<PVector>();
   
@@ -47,7 +48,7 @@ class GameManager {
 
   void update(float dt) {
     for (CelestialBody body : bodies) {
-      body.move(dt);
+      body.move(dt, simulationSpeed);
       body.acl.set(0,0);
       for (CelestialBody body2 : bodies) {
         if (body != body2) {

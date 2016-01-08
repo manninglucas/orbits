@@ -19,7 +19,8 @@ abstract class CelestialBody {
     path = new ArrayList<PVector>();
   }
 
-  void move(float dt) {
+  void move(float dt, float simSpeed) {
+    dt *= simSpeed;
     acl.div((float)1e14);
     vel.add(PVector.mult(acl,dt));
     dpos = PVector.mult(vel, dt).add(PVector.mult(acl,0.5*dt*dt));
@@ -53,8 +54,8 @@ class Planet extends CelestialBody {
     super(ipos, ivel, imass, iradius, icol);
   }
 
-  void move(float dt) {
-    super.move(dt);
+  void move(float dt, float simSpeed) {
+    super.move(dt, simSpeed);
   }
 
 }
