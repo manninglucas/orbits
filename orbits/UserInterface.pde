@@ -11,8 +11,11 @@ class UserInterface {
   boolean planetMove = false;
   boolean help = false;
   boolean drawPath = true;
+  String[] helpString;
 
-  UserInterface() {}
+  UserInterface(String[] helpString_) {
+    helpString = helpString_;
+  }
 
   void draw(boolean paused, int bodyCount, CelestialBody selected) {
     fill(0);
@@ -46,7 +49,10 @@ class UserInterface {
     text("Red:     " + planetRed, width-textShift, 95);
     text("Green:   " + planetGreen, width-textShift, 110);
     text("Blue:    " + planetBlue, width-textShift, 125);
-    text("Preview: ", width-textShift, 140);
+    fill(255,255,0);
+    text("SimSpeed:" + game.simulationSpeed, width-textShift, 140);
+    fill(255);
+    text("Preview: ", width-textShift, 155);
     fill(color(planetRed, planetGreen, planetBlue));
     stroke(color(planetRed, planetGreen, planetBlue));
     ellipse(width-80,150+planetRadius, planetRadius, planetRadius);
@@ -63,23 +69,12 @@ class UserInterface {
     if (help) { //Display Help
       fill(0);
       noStroke();
-      rect(width-280,0,120,200+planetRadius*2+16);
+      rect(width-280,0,120,200+planetRadius*2+16); //Make sure the stars dont interfere
       rect(width-280,185+planetRadius*2+16,300,60);
       fill(255);
-      text("| ADD | SUB |", width-helpTextShift, 20);
-      text("| 'q' | 'a' |", width-helpTextShift, 35);
-      text("| 'w' | 's' |", width-helpTextShift, 50);
-      text("| 'e' | 'd' |", width-helpTextShift, 65);
-      text("| 'r' | 'f' |", width-helpTextShift, 80);
-      text("| 't' | 'g' |", width-helpTextShift, 95);
-      text("| 'y' | 'h' |", width-helpTextShift, 110);
-      text("| 'u' | 'j' |", width-helpTextShift, 125);
-      text("-------------", width-helpTextShift, 140);
-      text("'ESC' = Exit", width-helpTextShift, 155);
-      text("'p' =  Pause", width-helpTextShift, 170);
-      text("'l' =  Lines", width-helpTextShift, 185);
-      text("'o' = Reset #", width-helpTextShift, 200);
-      text("'z' = debug", width-helpTextShift, 215);
+      for (int i = 0 ; i < helpString.length; i++) {
+        text(helpString[i], width-helpTextShift, 20+i*15);
+      }
       text("'SPACE' = Reset board", width-helpTextShift, 230+planetRadius*2);
       text("Click to place a planet", width-helpTextShift, 245+planetRadius*2);
       text("Click on planet to modify", width-helpTextShift, 260+planetRadius*2);

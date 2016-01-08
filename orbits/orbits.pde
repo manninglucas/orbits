@@ -25,7 +25,9 @@ void setup() {
   ellipseMode(RADIUS);
   t = System.nanoTime();
   
-  UI = new UserInterface();
+  String help[] = loadStrings("help.txt");
+  
+  UI = new UserInterface(help);
   game = new GameManager(UI);
 
   size(1000, 600);

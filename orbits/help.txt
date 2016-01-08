@@ -1,0 +1,15 @@
+| ADD | SUB |
+| 'q' | 'a' |
+| 'w' | 's' |
+| 'e' | 'd' |
+| 'r' | 'f' |
+| 't' | 'g' |
+| 'y' | 'h' |
+| 'u' | 'j' |
+| 'i' | 'k' |
+-------------
+'ESC' = Exit
+'p' =  Pause
+'l' =  Lines
+'o' = Reset #
+'z' = debug
