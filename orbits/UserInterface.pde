@@ -75,14 +75,14 @@ class UserInterface {
       for (int i = 0 ; i < helpString.length; i++) {
         text(helpString[i], width-helpTextShift, 20+i*15);
       }
-      text("'SPACE' = Reset board", width-helpTextShift, 230+planetRadius*2);
-      text("Click to place a planet", width-helpTextShift, 245+planetRadius*2);
-      text("Click on planet to modify", width-helpTextShift, 260+planetRadius*2);
+      text("'SPACE' = Reset board", width-helpTextShift, 245+planetRadius*2);
+      text("Click to place a planet", width-helpTextShift, 260+planetRadius*2);
+      text("Click on planet to modify", width-helpTextShift, 275+planetRadius*2);
       if (planetSelected) {
         fill(255);
-        text("'BACKSPACE' = Delete planet", width-helpTextShift, 275+planetRadius*2);
-        text("'ENTER' =  Deselect planet", width-helpTextShift, 290+planetRadius*2);
-        text("'m' =  Toggle move planet with mouse", width-helpTextShift, 305+planetRadius*2);
+        text("'BACKSPACE' = Delete planet", width-helpTextShift, 290+planetRadius*2);
+        text("'ENTER' =  Deselect planet", width-helpTextShift, 305+planetRadius*2);
+        text("'m' =  Toggle moving with mouse", width-helpTextShift, 320+planetRadius*2);
       }
     }
   }

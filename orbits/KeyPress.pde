@@ -18,6 +18,9 @@ void keyPressed() {
     case ' ':
       resetBoard();
       break;
+    case 'b':
+      game.showStars = !game.showStars;
+      break;
     case 'q':
       UI.planetXvel += 2;
       break;
@@ -40,7 +43,7 @@ void keyPressed() {
       break;
     case 'r':
      if (UI.planetRadius < 80) { 
-        UI.planetRadius -= 2;
+        UI.planetRadius += 2;
       }
       break;
     case 'f':

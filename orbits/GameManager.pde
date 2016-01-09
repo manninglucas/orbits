@@ -1,6 +1,7 @@
 class GameManager {
   int framerate = 60;
   boolean paused = false;
+  boolean showStars = true;
   int gameWidth = width-200;
   int gameHeight = 600;
   final float GRAVITY = 6.67e-11;
@@ -25,10 +26,12 @@ class GameManager {
   
   void background()
   {
-    for (PVector star : stars) {
-      noStroke();
-      fill(255);
-      ellipse(star.x, star.y, 1, 1);
+    if (showStars) {
+      for (PVector star : stars) {
+        noStroke();
+        fill(255);
+        ellipse(star.x, star.y, 1, 1);
+      }
     }
   }
 

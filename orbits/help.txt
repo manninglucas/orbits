@@ -13,3 +13,4 @@
 'l' =  Lines
 'o' = Reset #
 'z' = debug
+'b' = Stars
