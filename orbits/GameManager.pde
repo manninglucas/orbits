@@ -1,5 +1,6 @@
 class GameManager {
   int framerate = 60;
+  boolean dragged; //For planet spawning
   boolean paused = false;
   boolean showStars = true;
   int gameWidth = width-200;

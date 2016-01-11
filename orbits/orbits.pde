@@ -98,7 +98,6 @@ void mouseClicked() {
   }
   noSpawn = false;
 }
-boolean dragged;
 void mouseDragged() {
   if (UI.planetSelected) {
     game.selected.vel.add(new PVector(mouseX - pmouseX, mouseY - pmouseY)); 
@@ -106,7 +105,7 @@ void mouseDragged() {
     UI.planetXvel += mouseX - pmouseX;
     UI.planetYvel += mouseY - pmouseY;
   }
-  dragged = true;
+  game.dragged = true;
   
   if (game.drawFun) {
     game.addBody(new Planet(new PVector(mouseX, mouseY), new PVector(UI.planetXvel,UI.planetYvel),
@@ -123,7 +122,7 @@ void mouseDragged() {
 }
 
 void mouseReleased() { 
-  if (!UI.planetSelected && dragged) {
+  if (!UI.planetSelected && game.dragged) {
     game.addBody(new Planet(new PVector(mouseX, mouseY), new PVector(UI.planetXvel,UI.planetYvel),
                          (float)UI.planetMass, UI.planetRadius, color(UI.planetRed, UI.planetGreen, UI.planetBlue)));
     UI.planetRed = int(random(0,255));
@@ -132,6 +131,6 @@ void mouseReleased() {
           
     UI.planetXvel = 20;
     UI.planetYvel = 20;
-    dragged = false;
+    game.dragged = false;
   }
 }
