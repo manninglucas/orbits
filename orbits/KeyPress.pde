@@ -90,7 +90,10 @@ void keyPressed() {
       break;
     case 'k':
       game.simulationSpeed /= 2;
-      break;    
+      break;
+    case '/':
+      game.drawFun = !game.drawFun;
+      break;
   }
   if (UI.planetSelected) {
     UI.selectPlanetChange(game.selected); //Update the planet when any keys are presses

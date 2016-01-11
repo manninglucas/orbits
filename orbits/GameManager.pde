@@ -7,7 +7,8 @@ class GameManager {
   final float GRAVITY = 6.67e-11;
   ArrayList<CelestialBody> bodies = new ArrayList<CelestialBody>();
   float simulationSpeed = 1;
-  
+  boolean drawFun = false;
+ 
   ArrayList<PVector> stars = new ArrayList<PVector>();
   
   CelestialBody selected;
@@ -58,22 +59,6 @@ class GameManager {
           PVector acl = PVector.sub(body2.pos, body.pos);
           acl.setMag((float)(GRAVITY * body2.mass/Math.pow(body.pos.dist(body2.pos),2)));
           body.acl.add(acl);
-        }
-      }
-    }
-  }
-
-  void collide() {
-    for (int i = 0; i < bodies.size(); i++) {
-      CelestialBody body = bodies.get(i);
-      for (int j = 0; j < bodies.size(); j++) {
-        CelestialBody body2 = bodies.get(j);
-        if (body != body2) {
-          float dist = body.pos.dist(body2.pos);
-          if (dist < body.radius+body2.radius) {
-            //Better to do collisions here, no Concurrent exception
-            //We should decide what the planets should do.
-          }
         }
       }
     }

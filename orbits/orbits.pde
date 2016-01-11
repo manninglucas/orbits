@@ -57,7 +57,6 @@ void draw() {
   t = ct;
   if (!game.paused) {
     game.update(dt);
-    game.collide();
     game.cleanUp();
   }
   game.draw();
@@ -68,6 +67,7 @@ void mouseClicked() {
   //Check if mouse clicks on planet
   int mosX = mouseX; //Incase it moves while iterating
   int mosY = mouseY;
+
   for (int i = 0; i < game.bodies.size(); i++) {
       CelestialBody body = game.bodies.get(i);
       float xPos = body.pos.x;
@@ -89,6 +89,7 @@ void mouseClicked() {
 
   //Spawn Normally
   if (!noSpawn) { //not selecting planet
+
     game.addBody(new Planet(new PVector(mouseX, mouseY), new PVector(UI.planetXvel,UI.planetYvel),
                         (float)UI.planetMass, UI.planetRadius, color(UI.planetRed, UI.planetGreen, UI.planetBlue)));
     UI.planetRed = int(random(0,255));
@@ -96,4 +97,41 @@ void mouseClicked() {
     UI.planetBlue = int(random(0,255));
   }
   noSpawn = false;
+}
+boolean dragged;
+void mouseDragged() {
+  if (UI.planetSelected) {
+    game.selected.vel.add(new PVector(mouseX - pmouseX, mouseY - pmouseY)); 
+  } else {
+    UI.planetXvel += mouseX - pmouseX;
+    UI.planetYvel += mouseY - pmouseY;
+  }
+  dragged = true;
+  
+  if (game.drawFun) {
+    game.addBody(new Planet(new PVector(mouseX, mouseY), new PVector(UI.planetXvel,UI.planetYvel),
+                         (float)UI.planetMass, UI.planetRadius, color(UI.planetRed, UI.planetGreen, UI.planetBlue)));
+    UI.planetRed = int(random(0,255));
+    UI.planetGreen = int(random(0,255));
+    UI.planetBlue = int(random(0,255));
+          
+    UI.planetXvel = 20;
+    UI.planetYvel = 20;
+    
+  }
+    
+}
+
+void mouseReleased() { 
+  if (!UI.planetSelected && dragged) {
+    game.addBody(new Planet(new PVector(mouseX, mouseY), new PVector(UI.planetXvel,UI.planetYvel),
+                         (float)UI.planetMass, UI.planetRadius, color(UI.planetRed, UI.planetGreen, UI.planetBlue)));
+    UI.planetRed = int(random(0,255));
+    UI.planetGreen = int(random(0,255));
+    UI.planetBlue = int(random(0,255));
+          
+    UI.planetXvel = 20;
+    UI.planetYvel = 20;
+    dragged = false;
+  }
 }
