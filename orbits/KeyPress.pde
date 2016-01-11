@@ -34,11 +34,11 @@ void keyPressed() {
       UI.planetYvel -= 2;
       break;
     case 'e':
-      UI.planetMass += 100;
+      UI.planetMass += 1e23;
       break;
     case 'd':
       if (UI.planetMass > 0) {
-        UI.planetMass-=100;
+        UI.planetMass-=1e23;
       } 
       break;
     case 'r':

@@ -44,7 +44,7 @@ class UserInterface {
     textSize(14);
     text("X Vel:   " + planetXvel, width-textShift, 35);
     text("Y Vel:   " + planetYvel, width-textShift, 50);
-    text("Mass:    " + planetMass, width-textShift, 65);
+    text("Mass:    " + String.format("%6.3e", planetMass), width-textShift, 65);
     text("Radius:  " + planetRadius, width-textShift, 80);
     text("Red:     " + planetRed, width-textShift, 95);
     text("Green:   " + planetGreen, width-textShift, 110);
@@ -114,6 +114,11 @@ class UserInterface {
     planetYvel = 25;
     planetMass = 6e24;
     planetRadius = 10;
+    planetRed = int(random(0,255));
+    planetGreen = int(random(0,255));
+    planetBlue = int(random(0,255));
+  }
+  void randomizeColor() {
     planetRed = int(random(0,255));
     planetGreen = int(random(0,255));
     planetBlue = int(random(0,255));

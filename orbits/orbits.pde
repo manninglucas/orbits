@@ -84,17 +84,14 @@ void mouseClicked() {
   if (UI.planetSelected && UI.planetMove) { //User want to change planet location
     game.selected.pos = new PVector(mouseX, mouseY); //Change body's pos
     noSpawn = true;
-    game.selected.path.clear(); //Make this remove whole path, don't know how to delete all arraylist
+    game.selected.path.clear(); //Remove path on move
   }
-
   //Spawn Normally
   if (!noSpawn) { //not selecting planet
 
     game.addBody(new Planet(new PVector(mouseX, mouseY), new PVector(UI.planetXvel,UI.planetYvel),
                         (float)UI.planetMass, UI.planetRadius, color(UI.planetRed, UI.planetGreen, UI.planetBlue)));
-    UI.planetRed = int(random(0,255));
-    UI.planetGreen = int(random(0,255));
-    UI.planetBlue = int(random(0,255));
+    UI.randomizeColor();
   }
   noSpawn = false;
 }
@@ -110,12 +107,10 @@ void mouseDragged() {
   if (game.drawFun) {
     game.addBody(new Planet(new PVector(mouseX, mouseY), new PVector(UI.planetXvel,UI.planetYvel),
                          (float)UI.planetMass, UI.planetRadius, color(UI.planetRed, UI.planetGreen, UI.planetBlue)));
-    UI.planetRed = int(random(0,255));
-    UI.planetGreen = int(random(0,255));
-    UI.planetBlue = int(random(0,255));
+    UI.randomizeColor();
           
-    UI.planetXvel = 20;
-    UI.planetYvel = 20;
+    UI.planetXvel = 0;
+    UI.planetYvel = 0;
     
   }
     
@@ -125,12 +120,10 @@ void mouseReleased() {
   if (!UI.planetSelected && game.dragged) {
     game.addBody(new Planet(new PVector(mouseX, mouseY), new PVector(UI.planetXvel,UI.planetYvel),
                          (float)UI.planetMass, UI.planetRadius, color(UI.planetRed, UI.planetGreen, UI.planetBlue)));
-    UI.planetRed = int(random(0,255));
-    UI.planetGreen = int(random(0,255));
-    UI.planetBlue = int(random(0,255));
-          
-    UI.planetXvel = 20;
-    UI.planetYvel = 20;
+    UI.randomizeColor();
+    
+    UI.planetXvel = 24;
+    UI.planetYvel = 24;
     game.dragged = false;
   }
 }
