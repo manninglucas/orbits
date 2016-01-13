@@ -89,7 +89,8 @@ void keyPressed() {
         game.simulationSpeed *= 2;
       break;
     case 'k':
-      game.simulationSpeed /= 2;
+      if (game.simulationSpeed > 0.125)
+        game.simulationSpeed /= 2;
       break;
     case '/':
       game.drawFun = !game.drawFun;
