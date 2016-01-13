@@ -1,3 +1,4 @@
+//displays all the info and help 
 class UserInterface {
   //Initial Values For planet spawning/UI
   int planetXvel= 24;
@@ -17,10 +18,13 @@ class UserInterface {
     helpString = helpString_;
   }
 
+  //draws all the info
   void draw(boolean paused, int bodyCount, CelestialBody selected) {
+    //quick and dirty black background
     fill(0);
     noStroke();
     rect(width-160,0,300,185+planetRadius*2+16);
+
     if (planetSelected) { //If a planet is selected, update its attributes in draw
       selectPlanetLoad(selected);
     }
@@ -88,10 +92,10 @@ class UserInterface {
     }
   }
 
+  //Load in values to UI
+  //Used for updating UI too
   void selectPlanetLoad(CelestialBody body) {
-    //Load in values to UI
-    //Used for updating UI too
-    planetSelected = true;
+   planetSelected = true;
     planetXvel = int(body.vel.x);
     planetYvel = int(body.vel.y);
     planetMass = body.mass;
@@ -101,23 +105,23 @@ class UserInterface {
     planetBlue = int(blue(body.col));
   }
 
+  //Change the values of the planet based on keyboard input (param change)
   void selectPlanetChange(CelestialBody body) {
-    //Change the values of the planet based on keyboard input (param change)
     body.vel = new PVector(planetXvel, planetYvel);
     body.mass = (float)planetMass;
     body.radius = planetRadius;
     body.col = color(planetRed, planetGreen, planetBlue);
   }
+
+  //reset to default UI values
   void reset() {
-    //reset to default UI values
     planetXvel= 25;
     planetYvel = 25;
     planetMass = 6e24;
     planetRadius = 10;
-    planetRed = int(random(0,255));
-    planetGreen = int(random(0,255));
-    planetBlue = int(random(0,255));
+    randomizeColor();
   }
+
   void randomizeColor() {
     planetRed = int(random(0,255));
     planetGreen = int(random(0,255));

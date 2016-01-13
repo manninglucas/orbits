@@ -1,3 +1,5 @@
+//I am so sorry
+
 void keyPressed() {
   switch(key) {
     case 'p':
@@ -82,7 +84,7 @@ void keyPressed() {
       } 
       break;
     case 'z':
-      debug = !debug;
+      game.debug = !game.debug;
       break;
     case 'i':
       if (game.simulationSpeed < 8)
@@ -100,7 +102,7 @@ void keyPressed() {
     UI.selectPlanetChange(game.selected); //Update the planet when any keys are presses
     if (key == BACKSPACE) {
       //Delete planet
-      game.removeBody(game.selected);
+      game.bodies.remove(game.selected);
       UI.planetMove = false;
     } else if (key == ENTER) {
       //Planet done changing

@@ -1,4 +1,5 @@
-abstract class CelestialBody {
+//inidvidual body vairalbes are modified here
+class CelestialBody {
   PVector vel; //velocity
   PVector acl = new PVector(0,0); //acceleration
   PVector pos; //position
@@ -44,25 +45,5 @@ abstract class CelestialBody {
         line(p1.x, p1.y, p2.x, p2.y);
       }
     }
-  }
-}
-
-class Planet extends CelestialBody {
-
-  Planet(PVector ipos, PVector ivel, float imass,
-         float iradius, color icol) {
-    super(ipos, ivel, imass, iradius, icol);
-  }
-
-  void move(float dt, float simSpeed) {
-    super.move(dt, simSpeed);
-  }
-
-}
-
-class Star extends CelestialBody {
-  Star(PVector ipos, PVector ivel, float imass,
-         float iradius, color icol) {
-    super(ipos, ivel, imass, iradius, icol);
   }
 }
