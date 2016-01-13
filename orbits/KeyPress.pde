@@ -104,6 +104,7 @@ void keyPressed() {
       //Delete planet
       game.bodies.remove(game.selected);
       UI.planetMove = false;
+      UI.planetSelected = false;
     } else if (key == ENTER) {
       //Planet done changing
       UI.planetSelected = false;

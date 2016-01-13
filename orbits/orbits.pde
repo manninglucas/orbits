@@ -27,7 +27,7 @@ void setup() {
   UI = new UserInterface(help);
   game = new GameManager(UI);
 
-  size(1000, 600);
+  fullScreen();
 
   //creates a star in the center of the screen
   CelestialBody star = new CelestialBody(new PVector(width/2, height/2),

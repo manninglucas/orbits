@@ -1,4 +1,4 @@
-//inidvidual body vairalbes are modified here
+//individual body variables are modified here
 class CelestialBody {
   PVector vel; //velocity
   PVector acl = new PVector(0,0); //acceleration

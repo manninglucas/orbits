@@ -45,16 +45,20 @@ class GameManager {
 
   //deletes planets that are realllllly far away
   void cleanUp() {
-    for (int i = 0; i < bodies.size(); i++) {
-      CelestialBody body = bodies.get(i);
+    for (int i = 0; i < bodies.size(); i++) { //To avoid ConcurrentModExeception
+      CelestialBody body = bodies.get(i); 
       PVector center = new PVector(width/2, height/2);
       if (body.pos.dist(center) > 5000) {
+        if (body == game.selected) { //If the currently selected planet goes out of bounds
+          UI.planetSelected = false;
+          UI.planetMove = false;
+        }
         bodies.remove(i);
       }
     }
   }
 
-  //upsate physics variables and positions
+  //update physics variables and positions
   void update(float dt) {
     //go through every body and move it. Then reset acceleration
     for (CelestialBody body : bodies) {
