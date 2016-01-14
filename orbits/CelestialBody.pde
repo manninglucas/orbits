@@ -34,12 +34,13 @@ class CelestialBody {
     }
   }
 
-  void draw() {
+  void draw(color strokeColor) {
     fill(col);
-    stroke(col);
+    stroke(strokeColor);
     ellipse(pos.x, pos.y, radius, radius);
+    stroke(col); //Reset color for path drawing
     if (UI.drawPath) {
-      for (int i = 1; i < path.size(); ++i) {
+      for (int i = 1; i < path.size(); i++) {
         PVector p1 = path.get(i);
         PVector p2 = path.get(i-1);
         line(p1.x, p1.y, p2.x, p2.y);

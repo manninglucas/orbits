@@ -115,8 +115,8 @@ class UserInterface {
 
   //reset to default UI values
   void reset() {
-    planetXvel= 25;
-    planetYvel = 25;
+    planetXvel= 24;
+    planetYvel = 24;
     planetMass = 6e24;
     planetRadius = 10;
     randomizeColor();

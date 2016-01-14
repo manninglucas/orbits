@@ -81,7 +81,11 @@ class GameManager {
   void draw() {
     background();
     for (CelestialBody body : bodies) {
-      body.draw();
+      if (body == game.selected) { //if the planet is selected draw a grey border
+        body.draw(color(150,150,150)); 
+      } else {
+        body.draw(body.col);
+      }
     }
     UI.draw(paused, bodies.size(), selected);
   }
